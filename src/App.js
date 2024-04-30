@@ -1,25 +1,229 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
 
-function App() {
+export default function App() {
+  const [bill, setBill] = useState(0);
+  const [tip, setTip] = useState(0);
+  const [people, setPeople] = useState(0);
+  let tpp = 0;
+  let totalpp = 0;
+
+  if (bill > 0 && Number(tip) > 0 && people > 0) {
+    tpp = ((Number(tip) / 100) * bill) / 2;
+    totalpp = bill / 2 + tpp;
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div
+      id="total"
+      className="bg-light_grayish_cyan h-screen w-screen  flex flex-col items-center "
+    >
+      <div className="mt-14">
+        <img src="/images/logo.svg" alt="" className="" />
+      </div>
+      <div className=" border  bg-white md:w-10/12 w-screen  flex flex-col md:space-y-0 space-y-8 md:flex-row mt-14 curve p-4 md:space-x-4 md:rounded-3xl md:shadow-2xl">
+        <BillForm
+          bill={bill}
+          setBill={setBill}
+          tip={tip}
+          setTip={setTip}
+          setPeople={setPeople}
+          people={people}
+        />
+        <BillDisplay tip={tpp} total={totalpp} />
+      </div>
     </div>
   );
 }
 
-export default App;
+function BillForm({ onSubmit, bill, tip, people, setBill, setTip, setPeople }) {
+  let selected_button = 0;
+  function handleTipSelection(event) {
+    if (selected_button == event.target) {
+      event.target.classList.remove("bg-strong_cyan");
+      event.target.classList.add("bg-very_dark_cyan");
+      selected_button = 0;
+
+      // event.target.classList.toggle("very_dark_cyan");
+    } else if (
+      selected_button != 0 &&
+      event.target.value !== selected_button.value
+    ) {
+      console.log(2);
+      event.target.classList.add("bg-strong_cyan");
+      selected_button.remove("bg-strong_cyan");
+      selected_button.classList.add("bg-very_dark_cyan");
+      selected_button = event.target;
+    } else {
+      console.log(3);
+      event.target.classList.remove("bg-very_dark_cyan");
+      event.target.classList.add("bg-strong_cyan");
+      selected_button = event.target;
+    }
+
+    setTip(event.target.value);
+  }
+  return (
+    <form action="" className="flex flex-col">
+      <Entry
+        label={"Bill"}
+        icon={"/images/icon-dollar.svg"}
+        bill={bill}
+        setBill={setBill}
+      />
+      <input
+        type="hidden"
+        name=""
+        id="tip"
+        value={tip}
+        onChange={(e) => setTip(e.target.value)}
+      />
+      <TipDisplay onClick={handleTipSelection} />
+      <Entry2
+        label={"Number of people"}
+        icon={"/images/icon-person.svg"}
+        people={people}
+        setPeople={setPeople}
+      />
+    </form>
+  );
+}
+
+function BillDisplay({ tip, total }) {
+  return (
+    <div className=" flex  justify-between flex-col bg-very_dark_cyan p-10  rounded-xl mx-4 mb-4">
+      <div>
+        <TotalDisplay tip={tip}>Tip Amount</TotalDisplay>
+        <TotalDisplay2 total={total}>Total</TotalDisplay2>
+      </div>
+      <div className="mt-5 flex justify-center w-full">
+        <Reset />
+      </div>
+    </div>
+  );
+}
+
+function TotalDisplay({ tip, children }) {
+  return (
+    <div className="flex  md:space-x-4 justify-between  items-center mt-8">
+      <div className="flex flex-col">
+        <h1 className="text-white font-bold text-2xl font-mono">{children}</h1>
+        <p className="text-grayish_cyan">/ person</p>
+      </div>
+      <div className="flex items-center">
+        <img src="/images/icon-dollar.svg" alt="" className="h-8" />
+        <h1
+          id="totalperperson"
+          className="  font-mon font-bold text-4xl text-light_grayish_cyan"
+        >
+          {tip}
+        </h1>
+      </div>
+    </div>
+  );
+}
+function TotalDisplay2({ total, children }) {
+  return (
+    <div className="flex md:space-x-4 justify-between items-center mt-8">
+      <div className="flex flex-col">
+        <h1 className="text-white font-bold text-2xl font-mono">{children}</h1>
+        <p className="text-grayish_cyan">/ person</p>
+      </div>
+      <div className="flex items-center">
+        <img src="/images/icon-dollar.svg" alt="" className="h-8" />
+        <h1
+          id="totalperperson"
+          className="  font-mon font-bold text-4xl text-light_grayish_cyan"
+        >
+          {total}
+        </h1>
+      </div>
+    </div>
+  );
+}
+function Entry({ label, icon, bill, setBill }) {
+  return (
+    <div className="flex flex-col p-4 mt-5">
+      <div className="flex justify-start font-bold text-lg text-grayish_cyan">
+        {label}
+      </div>
+      <div className=" flex flex-row items-center justify-between bg-very_light_grayish_cyan text-4xl px-6 font-medium rounded-lg">
+        <img src={icon} alt="" />
+        <input
+          type="text"
+          className="border-l-2 focus:outline-none md:h-10 h-14 w-2/5 bg-very_light_grayish_cyan font-bold text-very_dark_cyan"
+          value={bill}
+          onChange={(e) => setBill(Number(e.target.value))}
+        />
+      </div>
+    </div>
+  );
+}
+
+function Entry2({ label, icon, people, setPeople }) {
+  return (
+    <div className="flex flex-col p-4 mt-5">
+      <div className="flex justify-start font-bold text-lg text-grayish_cyan">
+        {label}
+      </div>
+      <div className=" flex flex-row items-center justify-between bg-very_light_grayish_cyan text-4xl px-6 font-medium rounded-lg">
+        <img src={icon} alt="" />
+        <input
+          type="text"
+          className="border-l-2 focus:outline-none md:h-10 h-14 w-2/5 bg-very_light_grayish_cyan font-bold text-very_dark_cyan"
+          value={people}
+          onChange={(e) => setPeople(Number(e.target.value))}
+        />
+      </div>
+    </div>
+  );
+}
+function TipDisplay({ onClick }) {
+  return (
+    <div className=" flex flex-col w-full space-y-5 md:mt-2 mt-8 mb-8">
+      <div className="w-full font-bold text-grayish_cyan text-xl tracking-wide">
+        <h1>Select Tip %</h1>
+      </div>
+      <div
+        id="tips"
+        className="w-full grid md:grid-cols-3 grid-cols-2 md:gap-2 gap-8"
+      >
+        <Button tip={10} onClick={onClick} />
+        <Button tip={15} onClick={onClick} />
+        <Button tip={20} onClick={onClick} />
+        <Button tip={25} onClick={onClick} />
+        <Button tip={50} onClick={onClick} />
+        <input
+          type="text"
+          className=" pl-1 bg-light_grayish_cyan text-grayish_cyan font-bold md:text-xl text-4xl rounded-lg"
+          placeholder="Custom%"
+          onChange={(e) => onClick(e)}
+        />
+      </div>
+    </div>
+  );
+}
+
+function Button({ tip, onClick }) {
+  return (
+    <button
+      type="button"
+      className="md:px-0 px-16 py-2  bg-very_dark_cyan text-white font-bold text-2xl rounded-lg"
+      value={tip}
+      onClick={(e) => onClick(e)}
+    >
+      {tip}%
+    </button>
+  );
+}
+
+function Reset() {
+  return (
+    <button
+      type="button"
+      className="w-2/3md:px-0 px-16 py-2 bg-strong_cyan
+      text-very_dark_cyan font-bold text-2xl rounded-lg"
+    >
+      Reset
+    </button>
+  );
+}
