@@ -1,4 +1,4 @@
-import { useState } from "react";
+        import { useState } from "react";
 
 export default function App() {
   const [bill, setBill] = useState(0);
@@ -36,29 +36,36 @@ export default function App() {
 }
 
 function BillForm({ onSubmit, bill, tip, people, setBill, setTip, setPeople }) {
-  let selected_button = 0;
+  const [selected,setSelected] = useState(0)
+  console.log(selected.value)
+  console.log(4)
   function handleTipSelection(event) {
-    if (selected_button == event.target) {
+    if (selected=== event.target) {
       event.target.classList.remove("bg-strong_cyan");
       event.target.classList.add("bg-very_dark_cyan");
-      selected_button = 0;
+      setSelected(0)
 
       // event.target.classList.toggle("very_dark_cyan");
     } else if (
-      selected_button != 0 &&
-      event.target.value !== selected_button.value
+      selected !==0 &&
+      event.target!== selected
     ) {
-      console.log(2);
+        let button = selected
+      button.classList.remove("bg-strong_cyan")
+      button.classList.add("bg-very_dark_cyan")
+      event.target.classList.remove("bg-very_dark_cyan")
       event.target.classList.add("bg-strong_cyan");
-      selected_button.remove("bg-strong_cyan");
-      selected_button.classList.add("bg-very_dark_cyan");
-      selected_button = event.target;
+setSelected((selected)=> selected = event.target)
+      console.log(7)
     } else {
-      console.log(3);
+     
+      
       event.target.classList.remove("bg-very_dark_cyan");
       event.target.classList.add("bg-strong_cyan");
-      selected_button = event.target;
+      setSelected(selected => selected =event.target)
+      
     }
+    
 
     setTip(event.target.value);
   }
