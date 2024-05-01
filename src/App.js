@@ -4,14 +4,25 @@ export default function App() {
   const [bill, setBill] = useState(0);
   const [tip, setTip] = useState(0);
   const [people, setPeople] = useState(0);
+  const [selected,setSelected] = useState(0)
   let tpp = 0;
   let totalpp = 0;
 
   if (bill > 0 && Number(tip) > 0 && people > 0) {
-    tpp = ((Number(tip) / 100) * bill) / 2;
-    totalpp = bill / 2 + tpp;
+    tpp = ((Number(tip) / 100) * bill) /people
+    totalpp = bill /people + tpp;
   }
-
+ function handleReset(){
+   setBill(0)
+   setTip(0)
+   setPeople(0)
+   setSelected(selected =>{
+     let button = selected
+     button.classList.remove("bg-strong_cyan")
+     button.classList.add("bg-very_dark_cyan")
+     selected = 0
+   })
+ }
   return (
     <div
       id="total"
@@ -28,17 +39,17 @@ export default function App() {
           setTip={setTip}
           setPeople={setPeople}
           people={people}
+          selected={selected}
+          setSelected={setSelected}
         />
-        <BillDisplay tip={tpp} total={totalpp} />
+        <BillDisplay tip={tpp} total={totalpp} onReset={handleReset}/>
       </div>
     </div>
   );
 }
 
-function BillForm({ onSubmit, bill, tip, people, setBill, setTip, setPeople }) {
-  const [selected,setSelected] = useState(0)
-  console.log(selected.value)
-  console.log(4)
+function BillForm({ onSubmit, bill, tip, people, setBill, setTip, setPeople,selected,setSelected}){
+  
   function handleTipSelection(event) {
     if (selected=== event.target) {
       event.target.classList.remove("bg-strong_cyan");
@@ -95,15 +106,15 @@ setSelected((selected)=> selected = event.target)
   );
 }
 
-function BillDisplay({ tip, total }) {
+function BillDisplay({ tip, total ,onReset}) {
   return (
     <div className=" flex  justify-between flex-col bg-very_dark_cyan p-10  rounded-xl mx-4 mb-4">
       <div>
-        <TotalDisplay tip={tip}>Tip Amount</TotalDisplay>
-        <TotalDisplay2 total={total}>Total</TotalDisplay2>
+        <TotalDisplay tip={tip.toFixed(2)}>Tip Amount</TotalDisplay>
+        <TotalDisplay2 total={total.toFixed(2)}>Total</TotalDisplay2>
       </div>
       <div className="mt-5 flex justify-center w-full">
-        <Reset />
+        <Reset onReset={onReset}/>
       </div>
     </div>
   );
@@ -223,13 +234,13 @@ function Button({ tip, onClick }) {
   );
 }
 
-function Reset() {
+function Reset({onReset}) {
   return (
     <button
       type="button"
       className="w-2/3md:px-0 px-16 py-2 bg-strong_cyan
       text-very_dark_cyan font-bold text-2xl rounded-lg"
-    >
+     onClick={onReset}>
       Reset
     </button>
   );
