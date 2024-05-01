@@ -111,7 +111,7 @@ function BillDisplay({ tip, total ,onReset}) {
     <div className=" flex  justify-between flex-col bg-very_dark_cyan p-10  rounded-xl mx-4 mb-4">
       <div>
         <TotalDisplay tip={tip.toFixed(2)}>Tip Amount</TotalDisplay>
-        <TotalDisplay2 total={total.toFixed(2)}>Total</TotalDisplay2>
+      <TotalDisplay2 total={total.toFixed(2)}>Total</TotalDisplay2>
       </div>
       <div className="mt-5 flex justify-center w-full">
         <Reset onReset={onReset}/>
@@ -170,7 +170,7 @@ function Entry({ label, icon, bill, setBill }) {
           type="text"
           className="border-l-2 focus:outline-none md:h-10 h-14 w-2/5 bg-very_light_grayish_cyan font-bold text-very_dark_cyan"
           value={bill}
-          onChange={(e) => setBill(Number(e.target.value))}
+       onChange={(e) => !isNaN(e.target.value)?setBill(Number(e.target.value)):setBill(0)}
         />
       </div>
     </div>
@@ -189,7 +189,7 @@ function Entry2({ label, icon, people, setPeople }) {
           type="text"
           className="border-l-2 focus:outline-none md:h-10 h-14 w-2/5 bg-very_light_grayish_cyan font-bold text-very_dark_cyan"
           value={people}
-          onChange={(e) => setPeople(Number(e.target.value))}
+         onChange={(e) => !isNaN(e.target.value)?setPeople(Number(e.target.value)):setPeople(0)}
         />
       </div>
     </div>
